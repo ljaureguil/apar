@@ -45,6 +45,20 @@ function download(filename, text) {
     document.body.removeChild(element);
 }
 
+	function convert3(){
+
+   var fr=new FileReader();
+     
+        fr.onload=function(){
+          result.value+="**Document: \n\n"+ fr.result;// splitby();
+       
+        }
+  
+         fr.readAsText(txtfile.files[0])//
+}
+	
+	
+	
 </script>
 
 </html>
