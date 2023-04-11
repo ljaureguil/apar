@@ -1,0 +1,47 @@
+<html>
+<style>
+#resultado{
+	width:100%;
+	height:90%;
+	padding:10px;
+}
+</style>
+<textarea id="resultado"></textarea>
+<button onclick="dwnl()">download</button>
+<script src="ob.js"></script>
+
+<script>
+resultado.value=JSON.stringify(objeto);
+var fechas=objeto.fechas;
+var s=""
+for(var i=0;i<fechas.length;i++)
+{
+	s+=fechas[i].fe+"......."+fechas[i].di+"\n\n"	
+
+}
+resultado.value=s;
+
+function dwnl(){
+var n=prompt("File Name?","MyFile")
+if(n===null) return;
+var e=prompt("Extension?","txt")
+if(e===null) return;
+alert(resultado.value)
+download(resultado.value,n+"."+e);
+}
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+</script>
+
+</html>
