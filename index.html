@@ -1,64 +1,197 @@
 <html>
+  <link rel="icon" href="https://www.freeiconspng.com/thumbs/filter-icon/filter-icon-7.png">
+  <title>Apart</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+
 <style>
-#resultado{
-	width:100%;
-	height:90%;
-	padding:10px;
-}
+    #resultado {
+        width: 100%;
+        height: 90%;
+        padding: 10px;
+    }
+    #drule {
+        width: 60%;
+        height: 60%;
+        padding: 10px;
+        display: none;
+        position: absolute;
+        top: 10%;
+        left: 20%;
+        border-style: ridge;
+    }
+    #rule {
+        width: 100%;
+        height: 90%;
+        padding: 10px;
+        background-color: cornsilk;
+    }
 </style>
 <textarea id="resultado"></textarea>
+<button onclick="procesarEditor()">Procesar Editor</button>
+<button onclick="resultado.value=bkedi">Show Obj</button>
+<button onclick="resultado.value=bkres">Show Res</button>
 <button onclick="dwnl()">download</button>
-load <input id="txtfile" name="pdffile" type="file" multiple="multiple" oninput="convert3()"/>
-	
-	
-	<script src="ob.js"></script>
+load
+<input id="txtfile" name="pdffile" type="file" multiple="multiple" oninput="convert3()" />
+<button onclick="if(this.innerHTML==='Show Rule'){drule.style.display='block';this.innerHTML='Close Rule';}else{drule.style.display='none';this.innerHTML='Show Rule';}">Show Rule</button>
+<button onclick="procesarRule()">Procesar Regla</button>
+<div id="drule">
+    <textarea id="rule"></textarea>
+ 
+    <button onclick="getrule()">Get Rule</button>......................
+    <button onclick="updaterule()">Update rule</button>
+</div>
+
+<script src="ob.js"></script>
 
 <script>
-resultado.value=JSON.stringify(objeto);
-var fechas=objeto.fechas;
-var s=""
-for(var i=0;i<fechas.length;i++)
-{
-	s+=fechas[i].fe+"......."+fechas[i].di+"\n\n"	
+    1095786274538930176
+    var link = "https://jsonblob.com/api/1095786274538930176";
 
-}
-resultado.value=s;
+    var bkedi = "",
+        bkres = "";
+    if (ob) init();
+    else alert("Open an file")
 
-function dwnl(){
-var n=prompt("File Name?","MyFile")
-if(n===null) return;
-var e=prompt("Extension?","txt")
-if(e===null) return;
-alert(resultado.value)
-download(resultado.value,n+"."+e);
-}
-function download(filename, text) {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-    element.setAttribute('download', filename);
+    function procesarEditor() {
+        eval("try{" + resultado.value + "}catch(e){alert(e)}")
+        if (ob) init();
 
-    element.style.display = 'none';
-    document.body.appendChild(element);
+    }
 
-    element.click();
+    function init() {
+        resultado.value = JSON.stringify(ob);
+        bkedi = resultado.value;
 
-    document.body.removeChild(element);
-}
 
-	function convert3(){
 
-   var fr=new FileReader();
-     
-        fr.onload=function(){
-          result.value+="**Document: \n\n"+ fr.result;// splitby();
-       
+        procesarRule()
+
+
+
+    }
+
+    function dwnl() {
+        var n = prompt("File Name? (with extention)", "MyFile.txt")
+        if (n === null) return;
+        if (n.indexOf(".") === -1) n = n + ".txt"
+
+        download(n, resultado.value);
+    }
+
+    function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    function convert3() {
+
+        var fr = new FileReader();
+
+        fr.onload = function() {
+            alert(fr.result)
+            resultado.value = fr.result; // splitby();
+
         }
-  
-         fr.readAsText(txtfile.files[0])//
-}
-	
-	
-	
+
+        fr.readAsText(txtfile.files[0]) //
+    }
+
+    function procesarRule() {
+      var fechas = ob.fechas;
+        var s = "",
+            td = 0,
+            c = 0,
+            r = "";
+        if (rule.value != "" && rule.value[0]!="@") {
+          ///  if (confirm("You have something in rule editor, do you want to process with that rule?")) {
+                r = rule.value;
+           // }
+        }
+        for (var i = 0; i < fechas.length; i++) {
+            if (r === "") {
+                var f = fechas[i];
+                var fa = f.fe.split("-")[0];; // && f.n.indexOf("any")>-1
+                if (fa === "2022") {
+                    td += f.de * 1;
+                    c++
+                    s += f.fe + ".......\n" + f.di + "..\nDep..." + f.de + "..\nnota..." + f.n + "\n\n";
+
+                }
+            } else {
+                eval("try{" + r + "}catch(e){alert(e)}");
+
+            }
+        }
+        resultado.value = s + "\n\nTotal dep: " + td + "    obq: " + c;
+        bkres = resultado.value;
+
+    }
+
+
+    function getrule() {
+        GetJ(link, function(ob) {
+            rule.value = ob[0];
+        })
+    }
+
+    function updaterule() {
+        if (confirm("Saving it will replace the original, are you sure you want to proceed?")) {
+            var ob = [rule.value]
+            UpdateJ(link, ob, function() {
+                alert("Rule updated")
+            })
+        }
+
+    }
+
+    function GetJ(url, callback) {
+
+        //var url  = "http://localhost:8080/api/v1/users";
+        var xhr = new XMLHttpRequest()
+        xhr.open('GET', url + '/1', true)
+        xhr.onload = function() {
+            //         (xhr.responseText)
+            var users = JSON.parse(xhr.responseText);
+            //     var obb=decoding(users.prim);
+
+            if (xhr.readyState == 4 && xhr.status == "200") {
+                callback(users);
+            } else {
+                console.error(users);
+            }
+        }
+        xhr.send(null);
+    }
+
+    // Update a user
+    function UpdateJ(url, ob, callback) {
+
+        json = JSON.stringify(ob);
+        var xhr = new XMLHttpRequest();
+        xhr.open("PUT", url + '/12', true);
+        xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        xhr.onload = function() {
+            var users = JSON.parse(xhr.responseText);
+            if (xhr.readyState == 4 && xhr.status == "200") {
+                //  alert("Tu Forma ha sido Enviada");
+                if (callback != undefined) callback(users);
+            } else {
+                (users);
+            }
+        }
+        xhr.send(json);
+    }
 </script>
 
 </html>
