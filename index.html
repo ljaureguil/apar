@@ -41,35 +41,47 @@ load
     <textarea id="rule"></textarea>
  
     <button onclick="getrule()">Get Rule</button>......................
-    <button onclick="updaterule()">Update rule</button>
+    <button onclick="updaterule()">Update rule</button>.................
+     <button onclick="procesarRule2()">Procesar</button>
 </div>
 
 <script src="ob.js"></script>
 
 <script>
-    1095786274538930176
+   var ob={};
     var link = "https://jsonblob.com/api/1095786274538930176";
 
     var bkedi = "",
         bkres = "";
-    if (ob) init();
-    else alert("Open an file")
+    if (ob.fechas!=undefined) init();
+    else alert("Open a file")
 
     function procesarEditor() {
-        eval("try{" + resultado.value + "}catch(e){alert(e)}")
-        if (ob) init();
+    
+        if (ob.fechas!=undefined) init();
 
     }
 
     function init() {
-        resultado.value = JSON.stringify(ob);
-        bkedi = resultado.value;
+   
+     var fechas = ob.fechas;
+        var s = "",
+            td = 0,
+            c = 0;
+   
+        for (var i = 0; i < fechas.length; i++) {
+  
+                var f = fechas[i];
+                var fa = f.fe.split("-")[0];; // && f.n.indexOf("any")>-1
+                if (fa === "2022") {
+                    td += f.de * 1;
+                    c++
+                    s += f.fe + ".......\n" + f.di + "..\nDep..." + f.de + "..\nnota..." + f.n + "\n\n";
 
-
-
-        procesarRule()
-
-
+            } 
+        }
+        resultado.value = s + "\n\nTotal dep: " + td + "    obq: " + c;
+        bkres = resultado.value;
 
     }
 
@@ -99,40 +111,27 @@ load
         var fr = new FileReader();
 
         fr.onload = function() {
-            alert(fr.result)
-            resultado.value = fr.result; // splitby();
+            ob=JSON.parse(fr.result);// splitby();
+            bkedi=fr.result
 
         }
 
         fr.readAsText(txtfile.files[0]) //
     }
 
+    function procesarRule2(){
+ eval("try{" + rule.value + "}catch(e){alert(e)}");
+
+    }
+
     function procesarRule() {
       var fechas = ob.fechas;
         var s = "",
             td = 0,
-            c = 0,
-            r = "";
-        if (rule.value != "" && rule.value[0]!="@") {
-          ///  if (confirm("You have something in rule editor, do you want to process with that rule?")) {
-                r = rule.value;
-           // }
-        }
+            c = 0;
         for (var i = 0; i < fechas.length; i++) {
-            if (r === "") {
-                var f = fechas[i];
-                var fa = f.fe.split("-")[0];; // && f.n.indexOf("any")>-1
-                if (fa === "2022") {
-                    td += f.de * 1;
-                    c++
-                    s += f.fe + ".......\n" + f.di + "..\nDep..." + f.de + "..\nnota..." + f.n + "\n\n";
-
-                }
-            } else {
-                eval("try{" + r + "}catch(e){alert(e)}");
-
-            }
-        }
+                 eval("try{" + rule.value + "}catch(e){alert(e)}");
+  }
         resultado.value = s + "\n\nTotal dep: " + td + "    obq: " + c;
         bkres = resultado.value;
 
