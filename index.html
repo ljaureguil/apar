@@ -111,6 +111,7 @@ load
         var fr = new FileReader();
 
         fr.onload = function() {
+            alert(fr.result)
             ob=JSON.parse(fr.result);// splitby();
             bkedi=fr.result
 
@@ -120,7 +121,9 @@ load
     }
 
     function procesarRule2(){
- eval("try{" + rule.value + "}catch(e){alert(e)}");
+ 
+        eval(rule.value)
+// eval("try{" + rule.value + "}catch(e){alert(e)}");
 
     }
 
